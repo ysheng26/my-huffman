@@ -1,7 +1,7 @@
 use std::{
     cell::RefCell,
     cmp::Reverse,
-    collections::{hash_map::Entry, BinaryHeap, HashMap},
+    collections::{BinaryHeap, HashMap},
     rc::Rc,
 };
 
