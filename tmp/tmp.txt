@@ -43,3 +43,36 @@ TreeNode {
  x     x
 e d   c b
 
+
+
+
+
+
+
+
+
+
+
+
+
+Some(RefCell { value: TreeNode {
+    data: None,
+    left: Some(RefCell { value: TreeNode {
+        data: None,
+        left: Some(RefCell { value: TreeNode {
+            data: None,
+            left: Some(RefCell { value: TreeNode { data: Some('e'), left: None, right: None } }),
+            right: Some(RefCell { value: TreeNode { data: Some('d'), left: None, right: None } })
+        } }),
+        right: Some(RefCell { value: TreeNode {
+            data: None,
+            left: Some(RefCell { value: TreeNode { data: Some('c'), left: None, right: None } }),
+            right: Some(RefCell { value: TreeNode { data: Some('b'), left: None, right: None } }) }
+        })
+    } }),
+    right: Some(RefCell { value: TreeNode { data: Some('a'), left: None, right: None } }) 
+} })
+
+
+
+
