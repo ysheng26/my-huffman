@@ -2,7 +2,6 @@ use std::{
     cell::RefCell,
     cmp::Reverse,
     collections::{BinaryHeap, HashMap},
-    os,
     rc::Rc,
 };
 
@@ -210,7 +209,25 @@ fn encode(s: &str) -> (String, HashMap<String, String>) {
 }
 
 fn decode(s: &str, decoding_dict: &HashMap<String, String>) -> String {
-    "".to_owned()
+    // encoded = "1100100111001001", decoding_dict = {"01": "f", "11": "a", "10": "d", "00": "s"}
+    //            i
+    //            j
+
+    let mut i = 0;
+    let mut j = 0;
+    let mut res = Vec::<&str>::new();
+
+    while j <= s.len() {
+        let curr = &s[i..j];
+
+        if decoding_dict.contains_key(curr) {
+            res.push(curr);
+            i = j;
+        }
+        j += 1;
+    }
+
+    res.join("")
 }
 
 fn main() {
