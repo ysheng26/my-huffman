@@ -62,8 +62,6 @@ impl TreeNode {
     }
 }
 
-/// takes Option<&TreeNode> because it does not take ownership of left or right
-/// returns Option<TreeNode> because it is a new thing
 fn merge(
     left: Option<Rc<RefCell<TreeNode>>>,
     right: Option<Rc<RefCell<TreeNode>>>,
