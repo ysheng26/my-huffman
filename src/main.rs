@@ -62,7 +62,9 @@ impl TreeNode {
     }
 }
 
-fn merge(left: Option<TreeNode>, right: Option<TreeNode>) -> Option<TreeNode> {
+/// takes Option<&TreeNode> because it does not take ownership of left or right
+/// returns Option<TreeNode> because it is a new thing
+fn merge(left: Option<&TreeNode>, right: Option<&TreeNode>) -> Option<TreeNode> {
     match (left, right) {
         (None, None) => None,
         (None, Some(right_node)) => Some(right_node.clone()),
@@ -97,9 +99,9 @@ fn encode(s: &str) -> (String, HashMap<char, i32>) {
     // build tree with max_heap
     // [1, 1, 2, 3, 4]
 
-    let mut prev_node = TreeNode::new(None, None, None);
+    // let mut prev_node = TreeNode::new(None, None, None);
 
-    // let mut prev_node = None
+    let mut prev_node = None;
     while !max_heap.is_empty() {
         let a = max_heap.pop();
         let b = max_heap.pop();
@@ -117,29 +119,30 @@ fn encode(s: &str) -> (String, HashMap<char, i32>) {
             (Some((_, left_ch)), Some((_, right_ch))) => {
                 let left_node = TreeNode::new(Some(*left_ch), None, None);
                 let right_node = TreeNode::new(Some(*right_ch), None, None);
-                let merged_node = merge(Some(left_node), Some(right_node));
+                let merged_node = merge(Some(&left_node), Some(&right_node));
                 if let Some(merged_node) = merged_node {
                     curr_node = merged_node;
                 }
             }
         }
 
-        if &prev_node.data == None {
-            prev_node = curr_node;
+        if prev_node.is_none() {
+            prev_node = Some(curr_node);
         } else {
             // there was some node wating here.
             // merge prev_node and curr_node and set prev_node to the newly
             // merged node
 
-            let merged_node = merge(Some(prev_node), Some(curr_node));
+            let merged_node = merge(prev_node.as_ref(), Some(&curr_node));
             if let Some(merged_node) = merged_node {
-                prev_node = merged_node;
+                prev_node = Some(merged_node);
             }
         }
     }
     // when we break out of the loop prev_node is the root
 
     println!("max_heap {:?}", max_heap);
+    println!("prev_node {:?}", prev_node.unwrap());
 
     ("".to_owned(), freq)
 }
@@ -149,7 +152,7 @@ fn decode(s: &str, freq: &HashMap<char, i32>) -> String {
 }
 
 fn main() {
-    let input = "Hello, world!";
+    let input = "abaabcde";
     println!("encoding {}", input);
     let (encoded, freq) = encode(&input);
     println!("encoded = {}, freq = {:?}", encoded, freq);
