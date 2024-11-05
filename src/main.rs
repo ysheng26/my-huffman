@@ -2,6 +2,7 @@ use std::{
     cell::RefCell,
     cmp::Reverse,
     collections::{BinaryHeap, HashMap},
+    os,
     rc::Rc,
 };
 
@@ -82,7 +83,7 @@ fn build_tree(freq: &HashMap<char, i32>) -> Option<Rc<RefCell<TreeNode>>> {
     for (ch, count) in freq.iter() {
         max_heap.push((Reverse(count), ch));
     }
-    println!("max_heap {:?}", max_heap);
+    // println!("max_heap {:?}", max_heap);
 
     let mut prev_node = None;
     while !max_heap.is_empty() {
@@ -124,7 +125,7 @@ fn build_tree(freq: &HashMap<char, i32>) -> Option<Rc<RefCell<TreeNode>>> {
     }
     // when we break out of the loop prev_node is the root
 
-    println!("prev_node {:?}", prev_node);
+    // println!("prev_node {:?}", prev_node);
 
     prev_node
 }
@@ -138,29 +139,23 @@ fn aux(node: Option<Rc<RefCell<TreeNode>>>, curr: &mut Vec<char>, res: &mut Hash
     match node {
         None => return,
         Some(node) => {
-            println!("visiting {:?}", node.borrow().data);
             if !node.borrow().data.is_none() {
                 // curr into string then insert to map
                 let xs: String = curr.iter().collect();
                 res.insert(node.borrow().data.unwrap(), xs);
-                println!("base case hit, res {:?}", res);
                 return;
             }
 
             if !node.borrow().left.is_none() {
                 curr.push('0');
-                println!("before going in left branch. curr {:?}", curr);
                 aux(node.borrow().left.clone(), curr, res);
                 curr.pop();
-                println!("coming out of left branch. curr {:?}", curr);
             }
 
             if !node.borrow().right.is_none() {
                 curr.push('1');
-                println!("before going in right branch. curr {:?}", curr);
                 aux(node.borrow().right.clone(), curr, res);
                 curr.pop();
-                println!("coming out of right branch. curr {:?}", curr);
             }
         }
     }
@@ -202,8 +197,8 @@ fn encode(s: &str) -> (String, HashMap<String, String>) {
     let root = build_tree(&freq);
     let (encoding_dict, decoding_dict) = tree_to_dict(root);
 
-    println!("encoding_dict {:?}", encoding_dict);
-    println!("decoding_dict {:?}", decoding_dict);
+    // println!("encoding_dict {:?}", encoding_dict);
+    // println!("decoding_dict {:?}", decoding_dict);
 
     let encoded_string = s
         .to_string()
@@ -214,13 +209,19 @@ fn encode(s: &str) -> (String, HashMap<String, String>) {
     (encoded_string, decoding_dict)
 }
 
-fn decode(s: &str, freq: &HashMap<char, i32>) -> String {
+fn decode(s: &str, decoding_dict: &HashMap<String, String>) -> String {
     "".to_owned()
 }
 
 fn main() {
-    let input = "abaabcde";
-    println!("encoding {}", input);
-    let (encoded, freq) = encode(&input);
-    println!("encoded = {}, freq = {:?}", encoded, freq);
+    let input = std::env::args().nth(1).unwrap_or("abbcccdddd".to_string());
+    let (encoded, decoding_dict) = encode(&input);
+    println!(
+        "encoded = {:?}, decoding_dict = {:?}",
+        encoded, decoding_dict
+    );
+
+    let decoded = decode(&encoded, &decoding_dict);
+
+    println!("decoded = {:?}", decoded);
 }
