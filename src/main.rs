@@ -187,7 +187,7 @@ fn tree_to_dict(
 /// the decoding dictionary
 ///
 /// TODO: maybe create a type for the dictionary?
-fn encode(s: &str) -> (String, HashMap<String, String>) {
+pub fn encode(s: &str) -> (String, HashMap<String, String>) {
     let mut freq = HashMap::new();
     for ch in s.chars() {
         freq.entry(ch).and_modify(|v| *v += 1).or_insert(1);
@@ -208,7 +208,7 @@ fn encode(s: &str) -> (String, HashMap<String, String>) {
     (encoded_string, decoding_dict)
 }
 
-fn decode(s: &str, decoding_dict: &HashMap<String, String>) -> String {
+pub fn decode(s: &str, decoding_dict: &HashMap<String, String>) -> String {
     // encoded = "1100100111001001", decoding_dict = {"01": "f", "11": "a", "10": "d", "00": "s"}
     //            i
     //            j
